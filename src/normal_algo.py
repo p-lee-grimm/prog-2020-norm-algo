@@ -12,8 +12,8 @@ for line in file.readlines():
         count += 1
 file.close()
 
-have = [0]*count
-need = [0]*count
+have = ['']*count
+need = ['']*count
 zakl = [0]*count
 
 
@@ -67,4 +67,3 @@ while j < count:
             break
     else:
         j += 1
-
