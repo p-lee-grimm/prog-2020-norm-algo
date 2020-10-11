@@ -1,69 +1,65 @@
-count = 0
-text = open('result.txt', 'w')
-file = open('edit.txt', 'r')
-readd = file.read()
-text.write(readd)
-text.close()
-file.close()
-
-file = open('key.txt', 'r')
-for line in file.readlines():
-    if "/=--" in line:
-        count += 1
-file.close()
-
-have = ['']*count
-need = ['']*count
-zakl = [0]*count
-
-
-t = 0
-r = 0
-file = open('key.txt', 'r')
-for line in file.readlines():
-    if "/=--" in line:
-        have[t] = line[4:len(line) - 1]
-        t += 1
-    else:
-        if "--=>>" in line:
-            need[r] = line[5:len(line) - 1]
-            zakl[r] = 1
-            r += 1
-        else:
-            if "-=>>" in line:
-                need[r] = line[4:len(line) - 1]
-                zakl[r] = 0
-                r += 1
-
-
-def textfind(sourcetext):
-    kek = open('result.txt', 'r')
-    textt = kek.read()
-    a = textt.find(sourcetext)
+def text_find(source_text):
+    result_text = open('result.txt', 'r')
+    result_read = result_text.read()
+    a = result_read.find(source_text)
+    result_text.close()
     return a
 
 
-def markreplace(sourcetext, replacetext):
-    lol = open('result.txt', 'r')
-    textt = lol.read()
-    openfilew = open('result.txt', 'w')
-    openfilew.write(textt.replace(sourcetext, replacetext, 1))
-    lol.close()
-    openfilew.close()
+def markov_replace(source_text, replace_text):
+    result_file = open('result.txt', 'r')
+    result_text = result_file.read()
+    open_file_write = open('result.txt', 'w')
+    open_file_write.write(result_text.replace(source_text, replace_text, 1))
+    result_file.close()
+    open_file_write.close()
 
 
-for i in range(count):
-    print(have[i])
-    print(need[i])
+result_write = open('result.txt', 'w')
+initial_read = open('edit.txt', 'r')
+read_for_copy = initial_read.read()
+result_write.write(read_for_copy)
+result_write.close()
+initial_read.close()
 
-j = 0
-while j < count:
-    if textfind(have[j]) != -1:
-        if zakl[j] == 0:
-            markreplace(have[j], need[j])
-            j = 0
+permutation_number = 0
+key = open('key.txt', 'r')
+for line in key.readlines():
+    if "/=--" in line:
+        permutation_number += 1
+key.close()
+
+have_substrings = ['']*permutation_number
+need_substrings = ['']*permutation_number
+conclusive = [0]*permutation_number
+left_count = 0
+right_count = 0
+
+file = open('key.txt', 'r')
+for line in file.readlines():
+    if "/=--" in line:
+        have_substrings[left_count] = line[4:len(line) - 1]
+        left_count += 1
+    else:
+        if "--=>>" in line:
+            need_substrings[right_count] = line[5:len(line) - 1]
+            conclusive[right_count] = 1
+            right_count += 1
         else:
-            markreplace(have[j], need[j])
+            if "-=>>" in line:
+                need_substrings[right_count] = line[4:len(line) - 1]
+                conclusive[right_count] = 0
+                right_count += 1
+file.close()
+
+counter = 0
+while counter < permutation_number:
+    if text_find(have_substrings[counter]) != -1:
+        if conclusive[counter] == 0:
+            markov_replace(have_substrings[counter], need_substrings[counter])
+            counter = 0
+        else:
+            markov_replace(have_substrings[counter], need_substrings[counter])
             break
     else:
-        j += 1
+        counter += 1
